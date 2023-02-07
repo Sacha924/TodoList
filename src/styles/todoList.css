@@ -16,6 +16,13 @@
 .remove {
   background-color: rgb(235, 103, 80);
 }
+.dragactive {
+  background-color: rgb(0, 221, 236);
+}
+
+.dragcomplete {
+  background-color: rgb(255, 38, 0);
+}
 
 .todos__heading {
   font-size: 30px;
