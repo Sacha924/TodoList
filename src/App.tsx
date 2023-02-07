@@ -11,11 +11,16 @@ const App: React.FC = () => {
     const storedTodos = localStorage.getItem("todos");
     return storedTodos ? JSON.parse(storedTodos) : [];
   });
-  const [completedTodos, setCompletedTodos] = useState<Todo[]>([]);
+  const [completedTodos, setCompletedTodos] = useState<Todo[]>(() => {
+    const storedCompletedTodos = localStorage.getItem("completedTodos");
+    return storedCompletedTodos ? JSON.parse(storedCompletedTodos) : [];
+  });
 
   useEffect(() => {
+    console.log("todos", todos);
     localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    localStorage.setItem("completedTodos", JSON.stringify(completedTodos));
+  }, [todos, completedTodos]);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +33,7 @@ const App: React.FC = () => {
   const onDragEnd = (result: DropResult) => {
     const { destination, source } = result;
 
-    console.log(result);
+    // console.log(result);
 
     if (!destination) {
       return;
@@ -39,8 +44,8 @@ const App: React.FC = () => {
     }
 
     let add;
-    let active = todos;
-    let complete = completedTodos;
+    let active = [...todos];
+    let complete = [...completedTodos];
     // Source Logic
     if (source.droppableId === "TodosList") {
       add = active[source.index];
@@ -56,7 +61,6 @@ const App: React.FC = () => {
     } else {
       complete.splice(destination.index, 0, add);
     }
-
     setCompletedTodos(complete);
     setTodos(active);
   };
