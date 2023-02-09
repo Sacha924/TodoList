@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Todo from "../model";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { AiFillEdit, AiFillDelete, AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "./../styles/singleTodo.css";
 import { Draggable } from "react-beautiful-dnd";
@@ -37,10 +37,14 @@ const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }: Props) =>
     setEdit(false);
   };
 
+  const handleImportant = (id: number) => {
+    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, isImportant: !todo.isImportant } : todo)));
+  };
+
   return (
     <Draggable draggableId={todo.id.toString()} index={index}>
       {(provided) => (
-        <form className="todos__single" onSubmit={(e) => handleEdit(e, todo.id)} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+        <form className={`todos__single ${!todo.isImportant ? "lessImportant" : ""}`}  onSubmit={(e) => handleEdit(e, todo.id)} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           {edit ? (
             <input
               type="text"
@@ -75,6 +79,15 @@ const SingleTodo: React.FC<Props> = ({ index, todo, todos, setTodos }: Props) =>
             <span className="icon" onClick={() => handleDone(todo.id)}>
               <MdDone />
             </span>
+            {todo.isImportant ? (
+              <span className="icon" onClick={() => handleImportant(todo.id)}>
+                <AiFillStar />
+              </span>
+            ) : (
+              <span className="icon" onClick={() => handleImportant(todo.id)}>
+                <AiOutlineStar />
+              </span>
+            )}
           </div>
         </form>
       )}
